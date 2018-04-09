@@ -21,6 +21,12 @@ int stringIndexNum;
 color mousePointColor;
 color allColor;
 color oneWindowColor;
+color drawingColor;
+color movingLineColor;
+
+int speedLine;
+int lineWidth;
+
 boolean allOnOff = false;
 
 
@@ -198,13 +204,16 @@ void basicFadeDrawing(){
 void basicLineMoving(){
 
     pushStyle();
-    runPixelLineX = runPixelLineX + 1;
+    runPixelLineX = runPixelLineX + speedLine;
     if (runPixelLineX > simWidth) {
         runPixelLineX = 0;
+    } else if (runPixelLineX < 0) {
+        runPixelLineX = simWidth;
     }
-    stroke(255);
+    stroke(movingLineColor);
+    strokeWeight(lineWidth);
+    line(runPixelLineX, 0, runPixelLineX, height);
     for (int i=0; i<5; i++) {
-        line(runPixelLineX + i, 0, runPixelLineX, height);
     }
     popStyle();
 
@@ -453,7 +462,7 @@ void setupControlP5(){
 
     sceneList = cp5.addListBox("Scene List")
     .setPosition(530, 30)
-    .setSize(210, 100)
+    .setSize(210, 130)
     .setFont(cfont)
     .setItemHeight(21)
     .setBarHeight(21)
@@ -476,6 +485,7 @@ void setupControlP5(){
 }
 
 
+//----------------------------------------------------------------------------
 void controlEvent(ControlEvent theEvent) {
 
     if (theEvent.getName() == "Scene List") {
@@ -503,6 +513,32 @@ void controlEvent(ControlEvent theEvent) {
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
             cp5Sub.addColorWheel("oneWindowColor" , 500 + 270 , 30 , 200 ).setRGB(color(128,0,255));
+            break;
+
+            case 3:
+            cp5Sub.remove(this);
+            cp5Sub = new ControlP5(this);
+            cp5Sub.addColorWheel("drawingColor" , 500 + 270 , 30 , 200 ).setRGB(color(128,0,255));
+            break;
+
+            case 4:
+            cp5Sub.remove(this);
+            cp5Sub = new ControlP5(this);
+            cp5Sub.addSlider("speedLine")
+            .setMin(-5)
+            .setMax(5)
+            .setValue(1)
+            .setPosition(500 + 270, 30)
+            .setSize(150, 26)
+            ;
+            cp5Sub.addSlider("lineWidth")
+            .setMin(1)
+            .setMax(100)
+            .setValue(4)
+            .setPosition(500 + 270, 60)
+            .setSize(150, 26)
+            ;
+            cp5Sub.addColorWheel("movingLineColor" , 500 + 270 , 30 + 70, 200 ).setRGB(color(128,0,255));
             break;
         }
 
@@ -601,7 +637,7 @@ class Fenster {
         }
 
         pushStyle();
-        fill(fadeValue);
+        fill(drawingColor, fadeValue);
         rect(xPos, yPos, width, height);
         popStyle();
     }
