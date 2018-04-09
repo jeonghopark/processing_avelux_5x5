@@ -1,5 +1,11 @@
 // ~/Projects/LED_Fassade/opc/openpixelcontrol-master(master*) » make && ./bin/gl_server_avelux_5x5 -l ./layouts/freespace_avelux_5x5.json
 
+import controlP5.*;
+ControlP5 cp5;
+ControlP5 cp5Sub;
+
+ListBox sceneList;
+
 OPC opc[];
 Fenster fenster[];
 
@@ -12,9 +18,18 @@ PFont font;
 
 int stringIndexNum;
 
+color mousePointColor;
+color allColor;
+boolean allOnOff = false;
+
 //----------------------------------------------------------------------------
 void setup() {
     size(1000, 700);
+
+
+    cp5 = new ControlP5(this);
+    setupControlP5();
+    cp5Sub = new ControlP5(this);
 
     font = createFont("verdana.ttf", 20);
     textFont(font);
@@ -47,6 +62,11 @@ void setup() {
 void draw(){
     background(0);
 
+    pushStyle();
+    fill(30);
+    rect(width * 0.5, 0, width * 0.5, height);
+    popStyle();
+
     pushMatrix();
     for (int i=0; i<fenster.length; i++) {
         fenster[i].basicDisplay();
@@ -54,37 +74,32 @@ void draw(){
     popMatrix();
 
 
-    switch(key) {
-        case 49:
+    switch(int(sceneList.getValue())) {
+        case 0:
         basicMouseInteraction();
-        text("Mouse Interaction", 30, 30);
         break;
         
-        case 50:
+        case 1:
         allWindows();
-        text("All On Off", 30, 30);
         break;
         
-        case 51:
+        case 2:
         basicClickDrawing();
-        text("Click Drawing", 30, 30);
         break;
 
-        case 52:
+        case 3:
         basicFadeDrawing();
-        text("Fade Drawing", 30, 30);
         break;
 
-        case 53:
+        case 4:
         basicLineMoving();
-        text("Line Moving", 30, 30);
         break;
 
-        case 54:
+        case 5:
         if (frameCount % 20 == 0) {
             stringIndexNum++;
         }
-        stingView("avelux");
+        stingView("avelux!");
         break;
     }
 
@@ -111,9 +126,14 @@ void stingView(String str) {
 void basicMouseInteraction(){
 
     pushMatrix();
+
+    fill(mousePointColor);
+
     float dotSize = 50;
     // image(dot, mouseX - dotSize/2, mouseY - dotSize/2, dotSize, dotSize);
-    rect(mouseX - dotSize/2, mouseY - dotSize/2, dotSize, dotSize);
+    if (mouseX < width * 0.5 ) {
+        rect(mouseX - dotSize/2, mouseY - dotSize/2, dotSize, dotSize);
+    }
     popMatrix();
 
 }
@@ -123,9 +143,13 @@ void basicMouseInteraction(){
 void allWindows(){
 
     pushMatrix();
-    for (int i=0; i<fenster.length; i++) {
-        fenster[i].display();
+    pushStyle();
+    if (allOnOff) {
+        for (int i=0; i<fenster.length; i++) {
+            fenster[i].display(allColor);
+        }
     }
+    popStyle();
     popMatrix();
 
 }
@@ -414,6 +438,66 @@ void opcSetup() {
 }
 
 
+
+
+//----------------------------------------------------------------------------
+void setupControlP5(){
+
+    PFont pfont = createFont("Arial",11,true);
+    ControlFont cfont = new ControlFont(pfont,11);
+
+    sceneList = cp5.addListBox("Scene List")
+    .setPosition(530, 30)
+    .setSize(210, 100)
+    .setFont(cfont)
+    .setItemHeight(21)
+    .setBarHeight(21)
+    .setColorBackground(color(60))
+    .setColorActive(color(220, 0, 0))
+    .setColorForeground(color(120, 220, 120))
+    ;
+
+    sceneList.setValue(-1);
+    sceneList.getCaptionLabel().toUpperCase(true);
+    sceneList.getCaptionLabel().setHeight(20);
+    // sceneList.getCaptionLabel().setColor(0xffff0000);
+    sceneList.addItem("Mouse Interaction", 0);
+    sceneList.addItem("All On Off", 1);
+    sceneList.addItem("Click Drawing", 2);
+    sceneList.addItem("Fade Drawing", 3);
+    sceneList.addItem("Line Moving", 4);
+    sceneList.addItem("AVELUX!", 5);
+
+}
+
+
+void controlEvent(ControlEvent theEvent) {
+
+    if (theEvent.getName() == "Scene List") {
+        int _index = (int)(theEvent.getController().getValue());
+        switch (_index) {
+            case 0:
+            cp5Sub.remove(this);
+            cp5Sub = new ControlP5(this);
+            cp5Sub.addColorWheel("mousePointColor" , 500 + 270 , 30 , 200 ).setRGB(color(128,0,255));
+            break;
+            case 1:
+            cp5Sub.remove(this);
+            cp5Sub = new ControlP5(this);
+            cp5Sub.addToggle("allOnOff")
+            .setPosition(500 + 270, 30)
+            .setSize(50,50)
+            ;
+            cp5Sub.addColorWheel("allColor" , 500 + 270 , 30 + 70 , 200 ).setRGB(color(128,0,255));
+            break;
+        }
+    }
+
+}
+
+
+
+//----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 class Fenster {
 
@@ -454,6 +538,14 @@ class Fenster {
         // basic window click drawing
         pushStyle();
         fill(255);
+        rect(xPos, yPos, width, height);
+        popStyle();
+    }
+
+    void display(color c){
+        // basic window click drawing
+        pushStyle();
+        fill(c);
         rect(xPos, yPos, width, height);
         popStyle();
     }
