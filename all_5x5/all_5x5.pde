@@ -9,7 +9,6 @@ Minim minim;
 AudioInput in;
 FFT fftLin;
 
-
 ControlP5 cp5;
 ControlP5 cp5Sub;
 
@@ -17,6 +16,7 @@ ListBox sceneList;
 
 OPC opc[];
 Fenster fenster[];
+Typo typo;
 
 PImage dot;
 
@@ -69,6 +69,8 @@ void setup() {
     dot = loadImage("color-dot.png");
 
     opcSetup();
+
+    typo = new Typo();
 
     fenster = new Fenster[25];
     int _index = 0;
@@ -136,7 +138,7 @@ void draw(){
         break;
 
         case 7:
-        alphaDisplay(key, colorKeyBoard);
+        typo.alphaDisplay(key, colorKeyBoard);
         break;
 
         case 8:
@@ -195,7 +197,7 @@ void audioSpectrum() {
 void stingView(String str) {
 
     char _c = str.charAt(stringIndexNum % str.length());
-    alphaDisplay(_c, colorLongText);
+    typo.alphaDisplay(_c, colorLongText);
 
 }
 
@@ -290,188 +292,6 @@ void basicLineMoving(){
 
 
 
-//----------------------------------------------------------------------------
-void alphaDisplay(char k, color c){
-    pushMatrix();
-    pushStyle();
-
-    fill(c);
-
-    switch(k) {
-        case 'a':
-        case 'A':
-        rectDraw( "11, 12, 13, 14, 21, 24, 31, 32, 33, 34, 41, 44, 51, 54" );
-        break;
-
-        case 'b':
-        case 'B':
-        rectDraw("11, 12, 13, 21, 24, 31, 32, 33, 34, 41, 44, 51, 52, 53, 54");
-        break;
-        
-        case 'c':
-        case 'C':
-        rectDraw("11, 12, 13, 21, 31, 41, 51, 52, 53");
-        break;
-
-        case 'd':
-        case 'D':
-        rectDraw("11, 12, 13, 21, 24, 31, 34, 41, 44, 51, 52, 53");
-        break;
-
-        case 'e':
-        case 'E':
-        rectDraw("11, 12, 13, 21, 31, 32, 41, 51, 52, 53");
-        break;
-
-        case 'f':
-        case 'F':
-        rectDraw("11, 12, 13, 21, 31, 32, 41, 51");
-        break;
-
-        case 'g':
-        case 'G':
-        rectDraw("11, 12, 13, 14, 21, 31, 33, 34, 41, 44, 51, 52, 53, 54");
-        break;
-
-        case 'h':
-        case 'H':
-        rectDraw("11, 14, 21, 24, 31, 32, 33, 34, 41, 44, 51, 54");
-        break;
-
-        case 'i':
-        case 'I':
-        rectDraw("11, 21, 31, 41, 51");
-        break;
-
-        case 'j':
-        case 'J':
-        rectDraw("12, 13, 23, 33, 41, 43, 51, 52, 53");
-        break;
-
-        case 'k':
-        case 'K':
-        rectDraw("11, 14, 21, 23, 31, 32, 41, 43, 51, 54");
-        break;
-
-        case 'l':
-        case 'L':
-        rectDraw("11, 21, 31, 41, 51, 52, 53");
-        break;
-
-        case 'm':
-        case 'M':
-        rectDraw("11, 12, 13, 14, 15, 16, 21, 23, 25, 31, 33, 35, 41, 45, 51, 55");
-        break;
-
-        case 'n':
-        case 'N':
-        rectDraw("11, 14, 21, 22, 24, 31, 33, 34, 41, 44, 51, 54");
-        break;
-
-        case 'o':
-        case 'O':
-        rectDraw("11, 12, 13, 14, 21, 24, 31, 34, 41, 44, 51, 52, 53, 54");
-        break;
-
-        case 'p':
-        case 'P':
-        rectDraw("11, 12, 13, 14, 21, 24, 31, 32, 33, 34, 41, 51");
-        break;
-
-        case 'q':
-        case 'Q':
-        rectDraw("11, 12, 13, 14, 21, 24, 31, 34, 41, 43, 44, 51, 52, 53, 54");
-        break;
-
-        case 'r':
-        case 'R':
-        rectDraw("11, 12, 13, 14, 21, 24, 31, 32, 33, 34, 41, 43, 51, 54");
-        break;
-
-        case 's':
-        case 'S':
-        rectDraw("11, 12, 13, 21, 31, 32, 33, 43, 51, 52, 53");
-        break;
-
-        case 't':
-        case 'T':
-        rectDraw("11, 12, 13, 22, 32, 42, 52");
-        break;
-
-        case 'u':
-        case 'U':
-        rectDraw("11, 14, 21, 24, 31, 34, 41, 44, 51, 52, 53, 54");
-        break;
-
-        case 'v':
-        case 'V':
-        rectDraw("11, 15, 21, 25, 32, 34, 42, 44, 53");
-        break;
-
-        case 'w':
-        case 'W':
-        rectDraw("11, 15, 21, 25, 31, 33, 35, 41, 43, 45, 51, 52, 53, 54, 55");
-        break;
-
-        case 'x':
-        case 'X':
-        rectDraw("11, 13, 21, 23, 32, 41, 43, 51, 53");
-        break;
-
-        case 'y':
-        case 'Y':
-        rectDraw("11, 13, 21, 23, 32, 42, 52");
-        break;
-
-        case 'z':
-        case 'Z':
-        rectDraw("11, 12, 13, 23, 32, 41, 51, 52, 53");
-        break;
-
-        case ' ':
-        rectDraw("");
-        break;
-
-        case '.':
-        rectDraw("51");
-        break;
-
-        case ',':
-        rectDraw("42, 51");
-        break;
-
-        case '!':
-        rectDraw("11, 21, 31, 51");
-        break;
-
-        case '?':
-        rectDraw("11, 12, 13, 23, 32, 33, 52");
-        break;
-
-        case '-':
-        rectDraw("31, 32, 33");
-        break;
-
-        case '>':
-        rectDraw("21, 32, 41");
-        break;
-
-        case '<':
-        rectDraw("22, 31, 42");
-        break;
-
-        case '+':
-        rectDraw("23, 32, 33, 34, 43");
-        break;
-
-        case '=':
-        rectDraw("22, 23, 24, 42, 43, 44");
-        break;
-
-    }
-    popStyle();
-    popMatrix();
-}
 
 
 //----------------------------------------------------------------------------
@@ -702,103 +522,6 @@ void controlEvent(ControlEvent theEvent) {
             break;
         }
 
-    }
-
-}
-
-
-
-//----------------------------------------------------------------------------
-//----------------------------------------------------------------------------
-class Fenster {
-
-    float xPos;
-    float yPos;
-    float width;
-    float height;
-
-    float xMid;
-    float yMid;
-
-    boolean onoff;
-    float fadeValue;
-
-    color oneColor;
-
-    PVector _offSetPos = new PVector(50, 125);
-
-    Fenster(float x, float y, float w, float h){
-        xPos = x + _offSetPos.x;
-        yPos = y + _offSetPos.y;
-        width = w * 0.8;
-        height = h * 0.8;
-        xMid = xPos + width * 0.5;
-        yMid = yPos + height * 0.5;
-        onoff = false;
-        fadeValue = 0;
-        oneColor = color(0);
-    }
-
-    void basicDisplay(){
-        // basic window click drawing
-        pushStyle();
-        noFill();
-        stroke(255, 120);
-        rect(xPos, yPos, width, height);
-        popStyle();
-    }
-
-    void display(){
-        // basic window click drawing
-        pushStyle();
-        fill(255);
-        rect(xPos, yPos, width, height);
-        popStyle();
-    }
-
-    void display(color c){
-        // basic window click drawing
-        pushStyle();
-        fill(c);
-        rect(xPos, yPos, width, height);
-        popStyle();
-    }
-
-
-    void rectDisplay(){
-        pushStyle();
-        rect(xPos, yPos, width, height);
-        popStyle();
-    }
-
-
-    void clickDisplay(){
-        if (onoff == false) {
-            oneColor = color(0);
-        } 
-
-        pushStyle();
-        fill(oneColor);
-        rect(xPos, yPos, width, height);
-        popStyle();
-    }
-
-
-    void fadeDisplay(){
-        if (onoff == false) {
-            fadeValue = fadeValue - 5;
-            if (fadeValue < 0) {
-                onoff = true;
-                fadeValue = 0;
-            }
-        } else {
-            fadeValue = 255;
-        }
-
-        pushStyle();
-        fill(colorFadeDrawing, fadeValue);
-        rect(xPos, yPos, width, height);
-        popStyle();
     }
 
 }
