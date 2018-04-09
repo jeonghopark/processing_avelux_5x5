@@ -21,27 +21,27 @@ Fenster fenster[];
 PImage dot;
 
 int runPixelLineX;
-int simWidth;
+int widthSimulationWindows;
 
 PFont font;
 
 int stringIndexNum;
 
-color mousePointColor;
-color allColor;
-color oneWindowColor;
-color drawingColor;
-color movingLineColor;
-color aveluxColor;
-color keyboardColor;
+color colorMousePoint;
+color colorAll;
+color colorOneWindow;
+color colorFadeDrawing;
+color colorMovingLine;
+color colorLongText;
+color colorKeyBoard;
 
 int speedLine;
-int lineWidth;
-int speedAvelux;
+int widthLine;
+int speedLongText;
 float AudioInputVol;
 
 boolean allOnOff = false;
-boolean randomKeyboardColor = false;
+boolean colorRandomKeyboardOnOff = false;
 
 
 //----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ void setup() {
     textFont(font);
     textSize(20);
 
-    simWidth = 500;
+    widthSimulationWindows = 500;
 
     dot = loadImage("color-dot.png");
 
@@ -72,7 +72,7 @@ void setup() {
 
     fenster = new Fenster[25];
     int _index = 0;
-    int _wWidth = simWidth / 6;
+    int _wWidth = widthSimulationWindows / 6;
     int _wHeight = height / 7;
     for (int j=0; j<5; j++) {
         for (int i=0; i<5; i++) {
@@ -125,7 +125,7 @@ void draw(){
         break;
 
         case 5:
-        if (frameCount % speedAvelux == 0) {
+        if (frameCount % speedLongText == 0) {
             stringIndexNum++;
         }
         stingView("avelux!");
@@ -136,7 +136,14 @@ void draw(){
         break;
 
         case 7:
-        alphaDisplay(key, keyboardColor);
+        alphaDisplay(key, colorKeyBoard);
+        break;
+
+        case 8:
+        if (frameCount % speedLongText == 0) {
+            stringIndexNum++;
+        }
+        stingView("Christopher, Jealous, Jeniffer, JeongHo, Johann, Kim, Marius, Marc, Matthias, Max");
         break;
     }    
 
@@ -188,7 +195,7 @@ void audioSpectrum() {
 void stingView(String str) {
 
     char _c = str.charAt(stringIndexNum % str.length());
-    alphaDisplay(_c, aveluxColor);
+    alphaDisplay(_c, colorLongText);
 
 }
 
@@ -199,7 +206,7 @@ void basicMouseInteraction(){
 
     pushMatrix();
 
-    fill(mousePointColor);
+    fill(colorMousePoint);
 
     float dotSize = 50;
     // image(dot, mouseX - dotSize/2, mouseY - dotSize/2, dotSize, dotSize);
@@ -218,7 +225,7 @@ void allWindows(){
     pushStyle();
     if (allOnOff) {
         for (int i=0; i<fenster.length; i++) {
-            fenster[i].display(allColor);
+            fenster[i].display(colorAll);
         }
     }
     popStyle();
@@ -266,13 +273,13 @@ void basicLineMoving(){
 
     pushStyle();
     runPixelLineX = runPixelLineX + speedLine;
-    if (runPixelLineX > simWidth) {
+    if (runPixelLineX > widthSimulationWindows) {
         runPixelLineX = 0;
     } else if (runPixelLineX < 0) {
-        runPixelLineX = simWidth;
+        runPixelLineX = widthSimulationWindows;
     }
-    stroke(movingLineColor);
-    strokeWeight(lineWidth);
+    stroke(colorMovingLine);
+    strokeWeight(widthLine);
     line(runPixelLineX, 0, runPixelLineX, height);
     for (int i=0; i<5; i++) {
     }
@@ -421,6 +428,10 @@ void alphaDisplay(char k, color c){
         rectDraw("11, 12, 13, 23, 32, 41, 51, 52, 53");
         break;
 
+        case ' ':
+        rectDraw("");
+        break;
+
         case '.':
         rectDraw("51");
         break;
@@ -472,7 +483,9 @@ void rectDraw(String alpha_array){
         int _x = parseInt(list[i]) % 10 - 1;
 
         int _index = _x + _y * 5;
-        fenster[_index].rectDisplay();
+        if (_index >= 0) {
+            fenster[_index].rectDisplay();
+        }
     }
 
 }
@@ -487,7 +500,7 @@ void mousePressed(){
         float distY = dist(0, mouseY, 0, fenster[i].yMid);
         if (distX < fenster[i].width * 0.5 && distY < fenster[i].height * 0.5 && mousePressed) {
             fenster[i].onoff = !fenster[i].onoff;
-            fenster[i].oneColor = oneWindowColor;
+            fenster[i].oneColor = colorOneWindow;
         }
     }
 
@@ -496,8 +509,8 @@ void mousePressed(){
 
 //----------------------------------------------------------------------------
 void keyPressed(){
-    if (randomKeyboardColor) {
-        keyboardColor = color(random(255), random(255), random(255));
+    if (colorRandomKeyboardOnOff) {
+        colorKeyBoard = color(random(255), random(255), random(255));
     }
 }
 
@@ -550,7 +563,7 @@ void setupControlP5(){
 
     sceneList = cp5.addListBox("Scene List")
     .setPosition(530, 30)
-    .setSize(210, 20 + 20 * 8)
+    .setSize(210, 20 + 20 * 9)
     .setFont(cfont)
     .setItemHeight(20)
     .setBarHeight(20)
@@ -571,6 +584,7 @@ void setupControlP5(){
     sceneList.addItem("AVELUX!", 5);
     sceneList.addItem("Live Audio", 6);
     sceneList.addItem("KeyboardInput", 7);
+    sceneList.addItem("Credit", 8);
 
 }
 
@@ -586,7 +600,7 @@ void controlEvent(ControlEvent theEvent) {
             case 0:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
-            cp5Sub.addColorWheel("mousePointColor" , 500 + 270 , 30 , 200 ).
+            cp5Sub.addColorWheel("colorMousePoint" , 500 + 270 , 30 , 200 ).
             setRGB(color(128,0,255));
             break;
 
@@ -597,21 +611,21 @@ void controlEvent(ControlEvent theEvent) {
             .setPosition(500 + 270, 30)
             .setSize(50,50)
             ;
-            cp5Sub.addColorWheel("allColor" , 500 + 270 , 30 + 70 , 200 ).
+            cp5Sub.addColorWheel("colorAll" , 500 + 270 , 30 + 70 , 200 ).
             setRGB(color(128,0,255));
             break;
 
             case 2:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
-            cp5Sub.addColorWheel("oneWindowColor" , 500 + 270 , 30 , 200 ).
+            cp5Sub.addColorWheel("colorOneWindow" , 500 + 270 , 30 , 200 ).
             setRGB(color(128,0,255));
             break;
 
             case 3:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
-            cp5Sub.addColorWheel("drawingColor" , 500 + 270 , 30 , 200 ).
+            cp5Sub.addColorWheel("colorFadeDrawing" , 500 + 270 , 30 , 200 ).
             setRGB(color(128,0,255));
             break;
 
@@ -625,28 +639,28 @@ void controlEvent(ControlEvent theEvent) {
             .setPosition(500 + 270, 30)
             .setSize(150, 26)
             ;
-            cp5Sub.addSlider("lineWidth")
+            cp5Sub.addSlider("widthLine")
             .setMin(1)
             .setMax(100)
             .setValue(4)
             .setPosition(500 + 270, 60)
             .setSize(150, 26)
             ;
-            cp5Sub.addColorWheel("movingLineColor" , 500 + 270 , 30 + 70, 200 ).
+            cp5Sub.addColorWheel("colorMovingLine" , 500 + 270 , 30 + 70, 200 ).
             setRGB(color(128,0,255));
             break;
 
             case 5:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
-            cp5Sub.addSlider("speedAvelux")
+            cp5Sub.addSlider("speedLongText")
             .setMin(2)
             .setMax(120)
             .setValue(20)
             .setPosition(500 + 270, 30)
             .setSize(150, 26)
             ;
-            cp5Sub.addColorWheel("aveluxColor" , 500 + 270 , 30 + 70, 200 ).
+            cp5Sub.addColorWheel("colorLongText" , 500 + 270 , 30 + 70, 200 ).
             setRGB(color(128,0,255));
             break;
 
@@ -665,14 +679,27 @@ void controlEvent(ControlEvent theEvent) {
             case 7:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
-            cp5Sub.addToggle("randomKeyboardColor")
+            cp5Sub.addToggle("colorRandomKeyboardOnOff")
             .setPosition(500 + 270, 30)
             .setSize(50,50)
             ;
-            cp5Sub.addColorWheel("keyboardColor" , 500 + 270 , 30 + 70, 200 ).
+            cp5Sub.addColorWheel("colorKeyBoard" , 500 + 270 , 30 + 70, 200 ).
             setRGB(color(128,0,255));
             break;
 
+            case 8:
+            cp5Sub.remove(this);
+            cp5Sub = new ControlP5(this);
+            cp5Sub.addSlider("speedLongText")
+            .setMin(2)
+            .setMax(120)
+            .setValue(20)
+            .setPosition(500 + 270, 30)
+            .setSize(150, 26)
+            ;
+            cp5Sub.addColorWheel("colorLongText" , 500 + 270 , 30 + 70, 200 ).
+            setRGB(color(128,0,255));
+            break;
         }
 
     }
@@ -769,7 +796,7 @@ class Fenster {
         }
 
         pushStyle();
-        fill(drawingColor, fadeValue);
+        fill(colorFadeDrawing, fadeValue);
         rect(xPos, yPos, width, height);
         popStyle();
     }
