@@ -292,26 +292,6 @@ void basicLineMoving(){
 
 
 
-
-
-//----------------------------------------------------------------------------
-void rectDraw(String alpha_array){
-
-    String[] list = split(alpha_array, ", ");
-    for (int i=0; i<list.length; i++) {
-        int _y = parseInt(list[i]) / 10 - 1;
-        int _x = parseInt(list[i]) % 10 - 1;
-
-        int _index = _x + _y * 5;
-        if (_index >= 0) {
-            fenster[_index].rectDisplay();
-        }
-    }
-
-}
-
-
-
 //----------------------------------------------------------------------------
 void mousePressed(){
 

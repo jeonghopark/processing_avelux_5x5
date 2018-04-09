@@ -4,186 +4,242 @@ class Typo {
     Typo(){   
     }
 
-void alphaDisplay(char k, color c){
-    pushMatrix();
-    pushStyle();
+    void alphaDisplay(char k, color c){
+        pushMatrix();
+        pushStyle();
 
-    fill(c);
+        fill(c);
 
-    switch(k) {
-        case 'a':
-        case 'A':
-        rectDraw( "11, 12, 13, 14, 21, 24, 31, 32, 33, 34, 41, 44, 51, 54" );
-        break;
+        switch(k) {
+            case 'a':
+            case 'A':
+            rectDraw( "11, 12, 13, 14, 21, 24, 31, 32, 33, 34, 41, 44, 51, 54" );
+            break;
 
-        case 'b':
-        case 'B':
-        rectDraw("11, 12, 13, 21, 24, 31, 32, 33, 34, 41, 44, 51, 52, 53, 54");
-        break;
-        
-        case 'c':
-        case 'C':
-        rectDraw("11, 12, 13, 21, 31, 41, 51, 52, 53");
-        break;
+            case 'b':
+            case 'B':
+            rectDraw("11, 12, 13, 21, 24, 31, 32, 33, 34, 41, 44, 51, 52, 53, 54");
+            break;
 
-        case 'd':
-        case 'D':
-        rectDraw("11, 12, 13, 21, 24, 31, 34, 41, 44, 51, 52, 53");
-        break;
+            case 'c':
+            case 'C':
+            rectDraw("11, 12, 13, 21, 31, 41, 51, 52, 53");
+            break;
 
-        case 'e':
-        case 'E':
-        rectDraw("11, 12, 13, 21, 31, 32, 41, 51, 52, 53");
-        break;
+            case 'd':
+            case 'D':
+            rectDraw("11, 12, 13, 21, 24, 31, 34, 41, 44, 51, 52, 53");
+            break;
 
-        case 'f':
-        case 'F':
-        rectDraw("11, 12, 13, 21, 31, 32, 41, 51");
-        break;
+            case 'e':
+            case 'E':
+            rectDraw("11, 12, 13, 21, 31, 32, 41, 51, 52, 53");
+            break;
 
-        case 'g':
-        case 'G':
-        rectDraw("11, 12, 13, 14, 21, 31, 33, 34, 41, 44, 51, 52, 53, 54");
-        break;
+            case 'f':
+            case 'F':
+            rectDraw("11, 12, 13, 21, 31, 32, 41, 51");
+            break;
 
-        case 'h':
-        case 'H':
-        rectDraw("11, 14, 21, 24, 31, 32, 33, 34, 41, 44, 51, 54");
-        break;
+            case 'g':
+            case 'G':
+            rectDraw("11, 12, 13, 14, 21, 31, 33, 34, 41, 44, 51, 52, 53, 54");
+            break;
 
-        case 'i':
-        case 'I':
-        rectDraw("11, 21, 31, 41, 51");
-        break;
+            case 'h':
+            case 'H':
+            rectDraw("11, 14, 21, 24, 31, 32, 33, 34, 41, 44, 51, 54");
+            break;
 
-        case 'j':
-        case 'J':
-        rectDraw("12, 13, 23, 33, 41, 43, 51, 52, 53");
-        break;
+            case 'i':
+            case 'I':
+            rectDraw("11, 21, 31, 41, 51");
+            break;
 
-        case 'k':
-        case 'K':
-        rectDraw("11, 14, 21, 23, 31, 32, 41, 43, 51, 54");
-        break;
+            case 'j':
+            case 'J':
+            rectDraw("12, 13, 23, 33, 41, 43, 51, 52, 53");
+            break;
 
-        case 'l':
-        case 'L':
-        rectDraw("11, 21, 31, 41, 51, 52, 53");
-        break;
+            case 'k':
+            case 'K':
+            rectDraw("11, 14, 21, 23, 31, 32, 41, 43, 51, 54");
+            break;
 
-        case 'm':
-        case 'M':
-        rectDraw("11, 12, 13, 14, 15, 16, 21, 23, 25, 31, 33, 35, 41, 45, 51, 55");
-        break;
+            case 'l':
+            case 'L':
+            rectDraw("11, 21, 31, 41, 51, 52, 53");
+            break;
 
-        case 'n':
-        case 'N':
-        rectDraw("11, 14, 21, 22, 24, 31, 33, 34, 41, 44, 51, 54");
-        break;
+            case 'm':
+            case 'M':
+            rectDraw("11, 12, 13, 14, 15, 16, 21, 23, 25, 31, 33, 35, 41, 45, 51, 55");
+            break;
 
-        case 'o':
-        case 'O':
-        rectDraw("11, 12, 13, 14, 21, 24, 31, 34, 41, 44, 51, 52, 53, 54");
-        break;
+            case 'n':
+            case 'N':
+            rectDraw("11, 14, 21, 22, 24, 31, 33, 34, 41, 44, 51, 54");
+            break;
 
-        case 'p':
-        case 'P':
-        rectDraw("11, 12, 13, 14, 21, 24, 31, 32, 33, 34, 41, 51");
-        break;
+            case 'o':
+            case 'O':
+            rectDraw("11, 12, 13, 14, 21, 24, 31, 34, 41, 44, 51, 52, 53, 54");
+            break;
 
-        case 'q':
-        case 'Q':
-        rectDraw("11, 12, 13, 14, 21, 24, 31, 34, 41, 43, 44, 51, 52, 53, 54");
-        break;
+            case 'p':
+            case 'P':
+            rectDraw("11, 12, 13, 14, 21, 24, 31, 32, 33, 34, 41, 51");
+            break;
 
-        case 'r':
-        case 'R':
-        rectDraw("11, 12, 13, 14, 21, 24, 31, 32, 33, 34, 41, 43, 51, 54");
-        break;
+            case 'q':
+            case 'Q':
+            rectDraw("11, 12, 13, 14, 21, 24, 31, 34, 41, 43, 44, 51, 52, 53, 54");
+            break;
 
-        case 's':
-        case 'S':
-        rectDraw("11, 12, 13, 21, 31, 32, 33, 43, 51, 52, 53");
-        break;
+            case 'r':
+            case 'R':
+            rectDraw("11, 12, 13, 14, 21, 24, 31, 32, 33, 34, 41, 43, 51, 54");
+            break;
 
-        case 't':
-        case 'T':
-        rectDraw("11, 12, 13, 22, 32, 42, 52");
-        break;
+            case 's':
+            case 'S':
+            rectDraw("11, 12, 13, 21, 31, 32, 33, 43, 51, 52, 53");
+            break;
 
-        case 'u':
-        case 'U':
-        rectDraw("11, 14, 21, 24, 31, 34, 41, 44, 51, 52, 53, 54");
-        break;
+            case 't':
+            case 'T':
+            rectDraw("11, 12, 13, 22, 32, 42, 52");
+            break;
 
-        case 'v':
-        case 'V':
-        rectDraw("11, 15, 21, 25, 32, 34, 42, 44, 53");
-        break;
+            case 'u':
+            case 'U':
+            rectDraw("11, 14, 21, 24, 31, 34, 41, 44, 51, 52, 53, 54");
+            break;
 
-        case 'w':
-        case 'W':
-        rectDraw("11, 15, 21, 25, 31, 33, 35, 41, 43, 45, 51, 52, 53, 54, 55");
-        break;
+            case 'v':
+            case 'V':
+            rectDraw("11, 15, 21, 25, 32, 34, 42, 44, 53");
+            break;
 
-        case 'x':
-        case 'X':
-        rectDraw("11, 13, 21, 23, 32, 41, 43, 51, 53");
-        break;
+            case 'w':
+            case 'W':
+            rectDraw("11, 15, 21, 25, 31, 33, 35, 41, 43, 45, 51, 52, 53, 54, 55");
+            break;
 
-        case 'y':
-        case 'Y':
-        rectDraw("11, 13, 21, 23, 32, 42, 52");
-        break;
+            case 'x':
+            case 'X':
+            rectDraw("11, 13, 21, 23, 32, 41, 43, 51, 53");
+            break;
 
-        case 'z':
-        case 'Z':
-        rectDraw("11, 12, 13, 23, 32, 41, 51, 52, 53");
-        break;
+            case 'y':
+            case 'Y':
+            rectDraw("11, 13, 21, 23, 32, 42, 52");
+            break;
 
-        case ' ':
-        rectDraw("");
-        break;
+            case 'z':
+            case 'Z':
+            rectDraw("11, 12, 13, 23, 32, 41, 51, 52, 53");
+            break;
 
-        case '.':
-        rectDraw("51");
-        break;
+            case ' ':
+            rectDraw("");
+            break;
 
-        case ',':
-        rectDraw("42, 51");
-        break;
+            case '.':
+            rectDraw("51");
+            break;
 
-        case '!':
-        rectDraw("11, 21, 31, 51");
-        break;
+            case ',':
+            rectDraw("42, 51");
+            break;
 
-        case '?':
-        rectDraw("11, 12, 13, 23, 32, 33, 52");
-        break;
+            case '!':
+            rectDraw("11, 21, 31, 51");
+            break;
 
-        case '-':
-        rectDraw("31, 32, 33");
-        break;
+            case '?':
+            rectDraw("11, 12, 13, 23, 32, 33, 52");
+            break;
 
-        case '>':
-        rectDraw("21, 32, 41");
-        break;
+            case '-':
+            rectDraw("31, 32, 33");
+            break;
 
-        case '<':
-        rectDraw("22, 31, 42");
-        break;
+            case '>':
+            rectDraw("21, 32, 41");
+            break;
 
-        case '+':
-        rectDraw("23, 32, 33, 34, 43");
-        break;
+            case '<':
+            rectDraw("22, 31, 42");
+            break;
 
-        case '=':
-        rectDraw("22, 23, 24, 42, 43, 44");
-        break;
+            case '+':
+            rectDraw("23, 32, 33, 34, 43");
+            break;
+
+            case '=':
+            rectDraw("22, 23, 24, 42, 43, 44");
+            break;
+
+            case '0':
+            rectDraw("11, 12, 13, 14, 21, 24, 31, 34, 41, 44, 51, 52, 53, 54");
+            break;
+
+            case '1':
+            rectDraw("11, 12, 22, 32, 42, 52");
+            break;
+
+            case '2':
+            rectDraw("12, 13, 21, 24, 33, 42, 51, 52, 53, 54");
+            break;
+
+            case '3':
+            rectDraw("11, 12, 13, 23, 32, 33, 43, 51, 52, 53");
+            break;
+
+            case '4':
+            rectDraw("11, 13, 21, 23, 31, 32, 33, 43, 53");
+            break;
+
+            case '5':
+            rectDraw("11, 12, 13, 21, 31, 32, 33, 43, 51, 52, 53");
+            break;
+
+            case '6':
+            rectDraw("11, 12, 13, 21, 31, 32, 33, 41, 43, 51, 52, 53");
+            break;
+
+            case '7':
+            rectDraw("11, 12, 13, 23, 32, 33, 34, 43, 53");
+            break;
+
+            case '8':
+            rectDraw("11, 12, 13, 21, 23, 31, 32, 33, 41, 43, 51, 52, 53");
+            break;
+
+            case '9':
+            rectDraw("11, 12, 13, 21, 23, 31, 32, 33, 43, 51, 52, 53");
+            break;
+        }
+
+        popStyle();
+        popMatrix();
+    }
+
+    void rectDraw(String alpha_array){
+
+        String[] list = split(alpha_array, ", ");
+        for (int i=0; i<list.length; i++) {
+            int _y = parseInt(list[i]) / 10 - 1;
+            int _x = parseInt(list[i]) % 10 - 1;
+
+            int _index = _x + _y * 5;
+            if (_index >= 0) {
+                fenster[_index].rectDisplay();
+            }
+        }
 
     }
-    popStyle();
-    popMatrix();
-}
+
 
 }
