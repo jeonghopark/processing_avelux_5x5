@@ -10,6 +10,8 @@ int simWidth;
 
 PFont font;
 
+int stringIndexNum;
+
 //----------------------------------------------------------------------------
 void setup() {
     size(1000, 700);
@@ -18,7 +20,7 @@ void setup() {
     textFont(font);
     textSize(20);
 
-    int simWidth = 500;
+    simWidth = 500;
 
     dot = loadImage("color-dot.png");
 
@@ -36,6 +38,7 @@ void setup() {
     }
 
     runPixelLineX = 0;
+    stringIndexNum = 0;
 
 }
 
@@ -77,10 +80,28 @@ void draw(){
         text("Line Moving", 30, 30);
         break;
 
+        case 54:
+        if (frameCount % 20 == 0) {
+            stringIndexNum++;
+        }
+        stingView("avelux");
+        break;
     }
 
 
     alphaDisplay(key);
+
+
+}
+
+
+
+
+//----------------------------------------------------------------------------
+void stingView(String str) {
+
+    char _c = str.charAt(stringIndexNum % str.length());
+    alphaDisplay(_c);
 
 }
 
@@ -89,7 +110,6 @@ void draw(){
 //----------------------------------------------------------------------------
 void basicMouseInteraction(){
 
-    // basic mouse interaction : Pixel
     pushMatrix();
     float dotSize = 50;
     // image(dot, mouseX - dotSize/2, mouseY - dotSize/2, dotSize, dotSize);
@@ -102,7 +122,6 @@ void basicMouseInteraction(){
 //----------------------------------------------------------------------------
 void allWindows(){
 
-    // basic window setting
     pushMatrix();
     for (int i=0; i<fenster.length; i++) {
         fenster[i].display();
@@ -115,7 +134,6 @@ void allWindows(){
 //----------------------------------------------------------------------------
 void basicClickDrawing(){
 
-    // basic window click drawing
     pushMatrix();
     for (int i=0; i<fenster.length; i++) {
         float distX = dist(mouseX, 0, fenster[i].xMid, 0);
@@ -131,7 +149,6 @@ void basicClickDrawing(){
 //----------------------------------------------------------------------------
 void basicFadeDrawing(){
 
-    // basic window fade drawing
     pushMatrix();
     for (int i=0; i<fenster.length; i++) {
         float distX = dist(mouseX, 0, fenster[i].xMid, 0);
