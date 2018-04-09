@@ -1,6 +1,15 @@
 // ~/Projects/LED_Fassade/opc/openpixelcontrol-master(master*) » make && ./bin/gl_server_avelux_5x5 -l ./layouts/freespace_avelux_5x5.json
 
 import controlP5.*;
+
+import ddf.minim.analysis.*;
+import ddf.minim.*;
+
+Minim minim;  
+AudioInput in;
+FFT fftLin;
+
+
 ControlP5 cp5;
 ControlP5 cp5Sub;
 
@@ -23,13 +32,16 @@ color allColor;
 color oneWindowColor;
 color drawingColor;
 color movingLineColor;
+color aveluxColor;
+color keyboardColor;
 
 int speedLine;
 int lineWidth;
+int speedAvelux;
+float AudioInputVol;
 
 boolean allOnOff = false;
-
-
+boolean randomKeyboardColor = false;
 
 
 //----------------------------------------------------------------------------
@@ -37,6 +49,12 @@ void setup() {
 
     // important!!!
     size(1000, 700);
+
+    minim = new Minim(this);
+    in = minim.getLineIn();
+    fftLin = new FFT( in.bufferSize(), in.sampleRate() );
+    fftLin.linAverages( 5 );
+
 
     cp5 = new ControlP5(this);
     setupControlP5();
@@ -107,19 +125,65 @@ void draw(){
         break;
 
         case 5:
-        if (frameCount % 20 == 0) {
+        if (frameCount % speedAvelux == 0) {
             stringIndexNum++;
         }
         stingView("avelux!");
         break;
+
+        case 6:
+        audioSpectrum();
+        break;
+
+        case 7:
+        alphaDisplay(key, keyboardColor);
+        break;
     }
 
 
-    alphaDisplay(key);
-
+    
 
 }
 
+
+
+//----------------------------------------------------------------------------
+void audioSpectrum() {
+
+    pushStyle();
+    noStroke();
+    fftLin.forward( in.mix );
+
+    for(int i = 0; i <  fftLin.avgSize(); i++) {
+
+        float _spectrumV = abs(fftLin.getBand(i)) * AudioInputVol;
+
+        if (int(_spectrumV) == 1) {
+            fenster[20 + i].display(color(0, 255, 0));
+        } else if (int(_spectrumV) == 2) {
+            fenster[20 + i].display(color(0, 255, 0));
+            fenster[15 + i].display(color(0, 255, 0));
+        } else if (int(_spectrumV) == 3) {
+            fenster[20 + i].display(color(0, 255, 0));
+            fenster[15 + i].display(color(0, 255, 0));
+            fenster[10 + i].display(color(0, 255, 0));
+        } else if (int(_spectrumV) == 4) {
+            fenster[20 + i].display(color(0, 255, 0));
+            fenster[15 + i].display(color(0, 255, 0));
+            fenster[10 + i].display(color(0, 255, 0));
+            fenster[5 + i].display(color(255, 255, 0));
+        } else if (int(_spectrumV) == 5) {
+            fenster[20 + i].display(color(0, 255, 0));
+            fenster[15 + i].display(color(0, 255, 0));
+            fenster[10 + i].display(color(0, 255, 0));
+            fenster[5 + i].display(color(255, 255, 0));
+            fenster[0 + i].display(color(255, 0, 0));
+        }
+
+    }
+    popStyle();
+
+}
 
 
 
@@ -127,7 +191,7 @@ void draw(){
 void stingView(String str) {
 
     char _c = str.charAt(stringIndexNum % str.length());
-    alphaDisplay(_c);
+    alphaDisplay(_c, aveluxColor);
 
 }
 
@@ -223,11 +287,11 @@ void basicLineMoving(){
 
 
 //----------------------------------------------------------------------------
-void alphaDisplay(char k){
+void alphaDisplay(char k, color c){
     pushMatrix();
     pushStyle();
 
-    fill(255);
+    fill(c);
 
     switch(k) {
         case 'a':
@@ -409,7 +473,9 @@ void mousePressed(){
 
 //----------------------------------------------------------------------------
 void keyPressed(){
-
+    if (randomKeyboardColor) {
+        keyboardColor = color(random(255), random(255), random(255));
+    }
 }
 
 
@@ -453,7 +519,6 @@ void opcSetup() {
 
 
 
-
 //----------------------------------------------------------------------------
 void setupControlP5(){
 
@@ -462,10 +527,10 @@ void setupControlP5(){
 
     sceneList = cp5.addListBox("Scene List")
     .setPosition(530, 30)
-    .setSize(210, 130)
+    .setSize(210, 20 + 20 * 8)
     .setFont(cfont)
-    .setItemHeight(21)
-    .setBarHeight(21)
+    .setItemHeight(20)
+    .setBarHeight(20)
     .setColorBackground(color(60))
     .setColorActive(color(220, 0, 0))
     .setColorForeground(color(120, 220, 120))
@@ -481,6 +546,8 @@ void setupControlP5(){
     sceneList.addItem("Fade Drawing", 3);
     sceneList.addItem("Line Moving", 4);
     sceneList.addItem("AVELUX!", 5);
+    sceneList.addItem("Live Audio", 6);
+    sceneList.addItem("KeyboardInput", 7);
 
 }
 
@@ -496,7 +563,8 @@ void controlEvent(ControlEvent theEvent) {
             case 0:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
-            cp5Sub.addColorWheel("mousePointColor" , 500 + 270 , 30 , 200 ).setRGB(color(128,0,255));
+            cp5Sub.addColorWheel("mousePointColor" , 500 + 270 , 30 , 200 ).
+            setRGB(color(128,0,255));
             break;
 
             case 1:
@@ -506,19 +574,22 @@ void controlEvent(ControlEvent theEvent) {
             .setPosition(500 + 270, 30)
             .setSize(50,50)
             ;
-            cp5Sub.addColorWheel("allColor" , 500 + 270 , 30 + 70 , 200 ).setRGB(color(128,0,255));
+            cp5Sub.addColorWheel("allColor" , 500 + 270 , 30 + 70 , 200 ).
+            setRGB(color(128,0,255));
             break;
 
             case 2:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
-            cp5Sub.addColorWheel("oneWindowColor" , 500 + 270 , 30 , 200 ).setRGB(color(128,0,255));
+            cp5Sub.addColorWheel("oneWindowColor" , 500 + 270 , 30 , 200 ).
+            setRGB(color(128,0,255));
             break;
 
             case 3:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
-            cp5Sub.addColorWheel("drawingColor" , 500 + 270 , 30 , 200 ).setRGB(color(128,0,255));
+            cp5Sub.addColorWheel("drawingColor" , 500 + 270 , 30 , 200 ).
+            setRGB(color(128,0,255));
             break;
 
             case 4:
@@ -538,8 +609,47 @@ void controlEvent(ControlEvent theEvent) {
             .setPosition(500 + 270, 60)
             .setSize(150, 26)
             ;
-            cp5Sub.addColorWheel("movingLineColor" , 500 + 270 , 30 + 70, 200 ).setRGB(color(128,0,255));
+            cp5Sub.addColorWheel("movingLineColor" , 500 + 270 , 30 + 70, 200 ).
+            setRGB(color(128,0,255));
             break;
+
+            case 5:
+            cp5Sub.remove(this);
+            cp5Sub = new ControlP5(this);
+            cp5Sub.addSlider("speedAvelux")
+            .setMin(2)
+            .setMax(120)
+            .setValue(20)
+            .setPosition(500 + 270, 30)
+            .setSize(150, 26)
+            ;
+            cp5Sub.addColorWheel("aveluxColor" , 500 + 270 , 30 + 70, 200 ).
+            setRGB(color(128,0,255));
+            break;
+
+            case 6:
+            cp5Sub.remove(this);
+            cp5Sub = new ControlP5(this);
+            cp5Sub.addSlider("AudioInputVol")
+            .setMin(0)
+            .setMax(10)
+            .setValue(2)
+            .setPosition(500 + 270, 30)
+            .setSize(150, 26)
+            ;
+            break;
+
+            case 7:
+            cp5Sub.remove(this);
+            cp5Sub = new ControlP5(this);
+            cp5Sub.addToggle("randomKeyboardColor")
+            .setPosition(500 + 270, 30)
+            .setSize(50,50)
+            ;
+            cp5Sub.addColorWheel("keyboardColor" , 500 + 270 , 30 + 70, 200 ).
+            setRGB(color(128,0,255));
+            break;
+
         }
 
     }
@@ -607,7 +717,6 @@ class Fenster {
 
     void rectDisplay(){
         pushStyle();
-        fill(255);
         rect(xPos, yPos, width, height);
         popStyle();
     }
