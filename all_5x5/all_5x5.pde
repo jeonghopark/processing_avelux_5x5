@@ -53,29 +53,29 @@ void draw(){
 
     switch(key) {
         case 49:
-            basicMouseInteraction();
-            text("Mouse Interaction", 30, 30);
-            break;
+        basicMouseInteraction();
+        text("Mouse Interaction", 30, 30);
+        break;
         
         case 50:
-            allWindows();
-            text("All On Off", 30, 30);
-            break;
+        allWindows();
+        text("All On Off", 30, 30);
+        break;
         
         case 51:
-            basicClickDrawing();
-            text("Click Drawing", 30, 30);
-            break;
+        basicClickDrawing();
+        text("Click Drawing", 30, 30);
+        break;
 
         case 52:
-            basicFadeDrawing();
-            text("Fade Drawing", 30, 30);
-            break;
+        basicFadeDrawing();
+        text("Fade Drawing", 30, 30);
+        break;
 
         case 53:
-            basicLineMoving();
-            text("Line Moving", 30, 30);
-            break;
+        basicLineMoving();
+        text("Line Moving", 30, 30);
+        break;
 
     }
 
@@ -88,7 +88,7 @@ void draw(){
 
 //----------------------------------------------------------------------------
 void basicMouseInteraction(){
-    
+
     // basic mouse interaction : Pixel
     pushMatrix();
     float dotSize = 50;
@@ -101,14 +101,14 @@ void basicMouseInteraction(){
 
 //----------------------------------------------------------------------------
 void allWindows(){
-    
+
     // basic window setting
     pushMatrix();
     for (int i=0; i<fenster.length; i++) {
         fenster[i].display();
     }
     popMatrix();
-   
+
 }
 
 
@@ -152,7 +152,7 @@ void basicFadeDrawing(){
 
 //----------------------------------------------------------------------------
 void basicLineMoving(){
-    
+
     pushStyle();
     runPixelLineX = runPixelLineX + 1;
     if (runPixelLineX > simWidth) {
@@ -168,6 +168,7 @@ void basicLineMoving(){
 
 
 
+
 //----------------------------------------------------------------------------
 void alphaDisplay(char k){
     pushMatrix();
@@ -177,17 +178,145 @@ void alphaDisplay(char k){
 
     switch(k) {
         case 'a':
-        int[] a_array = {13, 22, 24, 31, 35, 41, 42, 43, 44, 45, 51, 55};
-        rectDraw( a_array );
+        rectDraw( "11, 12, 13, 14, 21, 24, 31, 32, 33, 34, 41, 44, 51, 54" );
         break;
+
         case 'b':
-        int[] b_array = {11, 12, 13, 14, 21, 25, 31, 32, 33, 34, 41, 45, 51, 52, 53, 54};
-        rectDraw(b_array);
+        rectDraw("11, 12, 13, 21, 24, 31, 32, 33, 34, 41, 44, 51, 52, 53, 54");
         break;
+        
         case 'c':
-        int[] c_array = {12, 13, 14, 21, 25, 31, 41, 45, 52, 53, 54};
-        rectDraw(c_array);
+        rectDraw("11, 12, 13, 21, 31, 41, 51, 52, 53");
         break;
+
+        case 'd':
+        rectDraw("11, 12, 13, 21, 24, 31, 34, 41, 44, 51, 52, 53");
+        break;
+
+        case 'e':
+        rectDraw("11, 12, 13, 21, 31, 32, 41, 51, 52, 53");
+        break;
+
+        case 'f':
+        rectDraw("11, 12, 13, 21, 31, 32, 41, 51");
+        break;
+
+        case 'g':
+        rectDraw("11, 12, 13, 14, 21, 31, 33, 34, 41, 44, 51, 52, 53, 54");
+        break;
+
+        case 'h':
+        rectDraw("11, 14, 21, 24, 31, 32, 33, 34, 41, 44, 51, 54");
+        break;
+
+        case 'i':
+        rectDraw("11, 21, 31, 41, 51");
+        break;
+
+        case 'j':
+        rectDraw("12, 13, 23, 33, 41, 43, 51, 52, 53");
+        break;
+
+        case 'k':
+        rectDraw("11, 14, 21, 23, 31, 32, 41, 43, 51, 54");
+        break;
+
+        case 'l':
+        rectDraw("11, 21, 31, 41, 51, 52, 53");
+        break;
+
+        case 'm':
+        rectDraw("11, 12, 13, 14, 15, 16, 21, 23, 25, 31, 33, 35, 41, 45, 51, 55");
+        break;
+
+        case 'n':
+        rectDraw("11, 14, 21, 22, 24, 31, 33, 34, 41, 44, 51, 54");
+        break;
+
+        case 'o':
+        rectDraw("11, 12, 13, 14, 21, 24, 31, 34, 41, 44, 51, 52, 53, 54");
+        break;
+
+        case 'p':
+        rectDraw("11, 12, 13, 14, 21, 24, 31, 32, 33, 34, 41, 51");
+        break;
+
+        case 'q':
+        rectDraw("11, 12, 13, 14, 21, 24, 31, 34, 41, 43, 44, 51, 52, 53, 54");
+        break;
+
+        case 'r':
+        rectDraw("11, 12, 13, 14, 21, 24, 31, 32, 33, 34, 41, 43, 51, 54");
+        break;
+
+        case 's':
+        rectDraw("11, 12, 13, 21, 31, 32, 33, 43, 51, 52, 53");
+        break;
+
+        case 't':
+        rectDraw("11, 12, 13, 22, 32, 42, 52");
+        break;
+
+        case 'u':
+        rectDraw("11, 14, 21, 24, 31, 34, 41, 44, 51, 52, 53, 54");
+        break;
+
+        case 'v':
+        rectDraw("11, 15, 21, 25, 32, 34, 42, 44, 53");
+        break;
+
+        case 'w':
+        rectDraw("11, 15, 21, 25, 31, 33, 35, 41, 43, 45, 51, 52, 53, 54, 55");
+        break;
+
+        case 'x':
+        rectDraw("11, 13, 21, 23, 32, 41, 43, 51, 53");
+        break;
+
+        case 'y':
+        rectDraw("11, 13, 21, 23, 32, 42, 52");
+        break;
+
+        case 'z':
+        rectDraw("11, 12, 13, 23, 32, 41, 51, 52, 53");
+        break;
+
+        case '.':
+        rectDraw("51");
+        break;
+
+        case ',':
+        rectDraw("42, 51");
+        break;
+
+        case '!':
+        rectDraw("11, 21, 31, 51");
+        break;
+
+        case '?':
+        rectDraw("11, 12, 13, 23, 32, 33, 52");
+        break;
+
+        case '-':
+        rectDraw("31, 32, 33");
+        break;
+
+        case '>':
+        rectDraw("21, 32, 41");
+        break;
+
+        case '<':
+        rectDraw("22, 31, 42");
+        break;
+
+        case '+':
+        rectDraw("23, 32, 33, 34, 43");
+        break;
+
+        case '=':
+        rectDraw("22, 23, 24, 42, 43, 44");
+        break;
+
     }
     popStyle();
     popMatrix();
@@ -195,10 +324,12 @@ void alphaDisplay(char k){
 
 
 //----------------------------------------------------------------------------
-void rectDraw(int[] alpha_array){
-    for (int i=0; i<alpha_array.length; i++) {
-        int _y = alpha_array[i] / 10 - 1;
-        int _x = alpha_array[i] % 10 - 1;
+void rectDraw(String alpha_array){
+    String[] list = split(alpha_array, ", ");
+    for (int i=0; i<list.length; i++) {
+        int _y = parseInt(list[i]) / 10 - 1;
+        int _x = parseInt(list[i]) % 10 - 1;
+
         int _index = _x + _y * 5;
         fenster[_index].rectDisplay();
     }
