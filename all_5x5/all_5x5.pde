@@ -20,12 +20,17 @@ int stringIndexNum;
 
 color mousePointColor;
 color allColor;
+color oneWindowColor;
 boolean allOnOff = false;
+
+
+
 
 //----------------------------------------------------------------------------
 void setup() {
-    size(1000, 700);
 
+    // important!!!
+    size(1000, 700);
 
     cp5 = new ControlP5(this);
     setupControlP5();
@@ -160,8 +165,6 @@ void basicClickDrawing(){
 
     pushMatrix();
     for (int i=0; i<fenster.length; i++) {
-        float distX = dist(mouseX, 0, fenster[i].xMid, 0);
-        float distY = dist(0, mouseY, 0, fenster[i].yMid);
         fenster[i].clickDisplay();
         fenster[i].basicDisplay();
     }
@@ -366,6 +369,7 @@ void alphaDisplay(char k){
 
 //----------------------------------------------------------------------------
 void rectDraw(String alpha_array){
+
     String[] list = split(alpha_array, ", ");
     for (int i=0; i<list.length; i++) {
         int _y = parseInt(list[i]) / 10 - 1;
@@ -374,6 +378,7 @@ void rectDraw(String alpha_array){
         int _index = _x + _y * 5;
         fenster[_index].rectDisplay();
     }
+
 }
 
 
@@ -381,12 +386,12 @@ void rectDraw(String alpha_array){
 //----------------------------------------------------------------------------
 void mousePressed(){
 
-    // basic window click drawing
     for (int i=0; i<fenster.length; i++) {
         float distX = dist(mouseX, 0, fenster[i].xMid, 0);
         float distY = dist(0, mouseY, 0, fenster[i].yMid);
         if (distX < fenster[i].width * 0.5 && distY < fenster[i].height * 0.5 && mousePressed) {
             fenster[i].onoff = !fenster[i].onoff;
+            fenster[i].oneColor = oneWindowColor;
         }
     }
 
@@ -474,13 +479,16 @@ void setupControlP5(){
 void controlEvent(ControlEvent theEvent) {
 
     if (theEvent.getName() == "Scene List") {
+        
         int _index = (int)(theEvent.getController().getValue());
+        
         switch (_index) {
             case 0:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
             cp5Sub.addColorWheel("mousePointColor" , 500 + 270 , 30 , 200 ).setRGB(color(128,0,255));
             break;
+
             case 1:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
@@ -490,7 +498,14 @@ void controlEvent(ControlEvent theEvent) {
             ;
             cp5Sub.addColorWheel("allColor" , 500 + 270 , 30 + 70 , 200 ).setRGB(color(128,0,255));
             break;
+
+            case 2:
+            cp5Sub.remove(this);
+            cp5Sub = new ControlP5(this);
+            cp5Sub.addColorWheel("oneWindowColor" , 500 + 270 , 30 , 200 ).setRGB(color(128,0,255));
+            break;
         }
+
     }
 
 }
@@ -512,6 +527,8 @@ class Fenster {
     boolean onoff;
     float fadeValue;
 
+    color oneColor;
+
     PVector _offSetPos = new PVector(50, 125);
 
     Fenster(float x, float y, float w, float h){
@@ -523,6 +540,7 @@ class Fenster {
         yMid = yPos + height * 0.5;
         onoff = false;
         fadeValue = 0;
+        oneColor = color(0);
     }
 
     void basicDisplay(){
@@ -560,24 +578,18 @@ class Fenster {
 
 
     void clickDisplay(){
-
-        // basic window fade drawing
         if (onoff == false) {
-            fadeValue = 0;
-        } else {
-            fadeValue = 255;
-        }
+            oneColor = color(0);
+        } 
 
         pushStyle();
-        fill(fadeValue);
+        fill(oneColor);
         rect(xPos, yPos, width, height);
         popStyle();
     }
 
 
     void fadeDisplay(){
-
-        // basic window fade drawing
         if (onoff == false) {
             fadeValue = fadeValue - 5;
             if (fadeValue < 0) {
@@ -592,7 +604,6 @@ class Fenster {
         fill(fadeValue);
         rect(xPos, yPos, width, height);
         popStyle();
-
     }
 
 }
