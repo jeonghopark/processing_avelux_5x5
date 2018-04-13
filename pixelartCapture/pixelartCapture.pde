@@ -1,16 +1,24 @@
 import processing.video.*;
 
+PWindow win;
+
 Capture cam;
 
 color[] pixelColors;
 
-void setup(){
+public void settings() {
     size(640, 480);
 
+}
+
+void setup(){
+
+    win = new PWindow();
     cam = new Capture(this, 640, 480);
     cam.start();
 
     pixelColors = new color[25];
+
 }
 
 void draw(){
@@ -32,17 +40,6 @@ void draw(){
     }
     popStyle();
 
-    pushStyle();
-    for (int i=0; i<5; i++) {
-        for (int j=0; j<5; j++) {
-            int index = i + j * 5;
-            color _c = pixelColors[index];
-            // noStroke();
-            fill(_c);
-            rect(i * rectSize * 0.2 + 20, j * rectSize * 0.2 + 20, rectSize * 0.2, rectSize * 0.2);
-        }
-    }
-    popStyle();
 }
 
 
@@ -60,3 +57,41 @@ void captureEvent(Capture c){
 }
 
 
+
+
+//--------------------------------------------------------
+class PWindow extends PApplet {
+    PWindow() {
+        super();
+        PApplet.runSketch(new String[] {this.getClass().getSimpleName()}, this);
+    }
+
+    int rectSize = 50;
+
+    void settings() {
+        size(250, 250);
+        pixelColors = new color[25];
+    }
+
+    void setup() {
+        background(0);
+    }
+
+    void draw() {
+        pushStyle();
+        if (pixelColors.length>0) {
+            for (int i=0; i<5; i++) {
+                for (int j=0; j<5; j++) {
+                    int index = i + j * 5;
+                    color _c = pixelColors[index];
+                    // noStroke();
+                    fill(_c);
+                    rect(i * rectSize, j * rectSize, rectSize, rectSize);
+                }
+            }
+        }
+        popStyle();
+
+    }
+
+}
