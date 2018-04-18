@@ -1,5 +1,13 @@
 import processing.video.*;
 
+import controlP5.*;
+
+ControlP5 cp5;
+
+int pixelSize = 45;
+int captureXPos = 0;
+int captureYPos = 0;
+
 PWindow subWindow;
 Capture cam;
 
@@ -10,7 +18,6 @@ ArrayList<AniFrame> aniFrames;
 //----------------------------------------------------------------------------
 public void settings() {
     size(640, 480);
-
 }
 
 
@@ -18,6 +25,27 @@ public void settings() {
 void setup(){
 
     subWindow = new PWindow();
+
+    cp5 = new ControlP5(this);
+  
+    // add a horizontal sliders, the value of this slider will be linked
+    // to variable 'sliderValue' 
+    cp5.addSlider("pixelSize")
+    .setPosition(20, 20)
+    .setRange(10, 70)
+    ;
+
+    cp5.addSlider("captureXPos")
+    .setPosition(20, 40)
+    .setRange(-30, 30)
+    ;
+
+    cp5.addSlider("captureYPos")
+    .setPosition(20, 50)
+    .setRange(-30, 30)
+    ;
+
+
     cam = new Capture(this, 640, 480);
     cam.start();
 
@@ -34,14 +62,14 @@ void draw(){
     pushStyle();
     noFill();
     stroke(0, 255, 0);
-    int rectSize = 50;
+    int rectSize = pixelSize;
 
     for (int i=0; i<5; i++) {
         for (int j=0; j<5; j++) {
             int index = i + j * 5;
-            rect(i * rectSize + 320 - 125, j * rectSize + 240 - 125, rectSize, rectSize);
-            int _x = i * rectSize + 320 - 100;
-            int _y = j * rectSize + 240 - 100;
+            rect(i * rectSize + 320 - 125 + captureXPos, j * rectSize + 240 - 125 + captureYPos, rectSize, rectSize);
+            int _x = i * rectSize + 320 - 100 + captureXPos;
+            int _y = j * rectSize + 240 - 100 + captureYPos;
             pixelColors[index] = get(_x, _y);
         }
     }

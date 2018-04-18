@@ -321,9 +321,19 @@ void keyPressed(){
 void opcSetup() {
 
     opc = new OPC[5];
-    for (int i=0; i<opc.length; i++) {
-        opc[i] = new OPC(this, "127.0.0.1", 7890 + i);
-    }
+
+    // für Simualtion
+    // for (int i=0; i<opc.length; i++) {
+    //     opc[i] = new OPC(this, "127.0.0.1", 7890 + i);
+    // }
+
+    // 5 x 5
+    opc[4] = new OPC(this, "192.168.1.230", 7890);
+    opc[3] = new OPC(this, "192.168.1.231", 7890);
+    opc[2] = new OPC(this, "192.168.1.232", 7890);
+    opc[1] = new OPC(this, "192.168.1.233", 7890);
+    opc[0] = new OPC(this, "192.168.1.234", 7890);
+
 
     opc[4].ledStrip(0, 60, width/12 * 1, height/7 * 2, 1.0, 0, true);
     opc[4].ledStrip(60, 60, width/12 * 2, height/7 * 2, 1.0, 0, true);
