@@ -1,13 +1,21 @@
 // ~/Projects/LED_Fassade/opc/openpixelcontrol-master(master*) » make && ./bin/gl_server_avelux_5x5 -l ./layouts/freespace_avelux_5x5.json
 
+// ~/Projects/LED_Fassade/opc/openpixelcontrol-master(master*) » ./bin/gl_server_avelux_5x5 -l ./layouts/freespace_avelux_5x5.json
+
 import controlP5.*;
 
 import ddf.minim.analysis.*;
 import ddf.minim.*;
 
-Minim minim;  
+import processing.video.*;
+
+Minim minim;
 AudioInput in;
 FFT fftLin;
+
+
+Capture camera;
+
 
 ControlP5 cp5;
 ControlP5 cp5Sub;
@@ -42,6 +50,11 @@ float AudioInputVol;
 
 boolean allOnOff = false;
 boolean colorRandomKeyboardOnOff = false;
+boolean cameraOnOff = false;
+float colorContrast;
+
+
+color[] pixelColors;
 
 
 //----------------------------------------------------------------------------
@@ -55,6 +68,9 @@ void setup() {
     fftLin = new FFT( in.bufferSize(), in.sampleRate() );
     fftLin.linAverages( 5 );
 
+    camera = new Capture(this, 160, 120, "USB Camera");
+    // println(camera.list());
+    camera.start();
 
     cp5 = new ControlP5(this);
     setupControlP5();
@@ -76,8 +92,8 @@ void setup() {
     int _index = 0;
     int _wWidth = widthSimulationWindows / 6;
     int _wHeight = height / 7;
-    for (int j=0; j<5; j++) {
-        for (int i=0; i<5; i++) {
+    for (int j = 0; j < 5; j++) {
+        for (int i = 0; i < 5; i++) {
             fenster[_index] = new Fenster(i * _wWidth, j * _wHeight, _wWidth, _wHeight);
             _index++;
         }
@@ -86,11 +102,13 @@ void setup() {
     runPixelLineX = 0;
     stringIndexNum = 0;
 
+    pixelColors = new color[25];
+
 }
 
 
 //----------------------------------------------------------------------------
-void draw(){
+void draw() {
     background(0);
 
     pushStyle();
@@ -99,55 +117,63 @@ void draw(){
     popStyle();
 
     pushMatrix();
-    for (int i=0; i<fenster.length; i++) {
+    for (int i = 0; i < fenster.length; i++) {
         fenster[i].basicDisplay();
     }
     popMatrix();
 
 
-    switch(int(sceneList.getValue())) {
-        case 0:
+    switch (int(sceneList.getValue())) {
+    case 0:
         basicMouseInteraction();
         break;
-        
-        case 1:
+
+    case 1:
         allWindows();
         break;
-        
-        case 2:
+
+    case 2:
         basicClickDrawing();
         break;
 
-        case 3:
+    case 3:
         basicFadeDrawing();
         break;
 
-        case 4:
+    case 4:
         basicLineMoving();
         break;
 
-        case 5:
+    case 5:
         if (frameCount % speedLongText == 0) {
             stringIndexNum++;
         }
         stingView("avelux!");
         break;
 
-        case 6:
+    case 6:
         audioSpectrum();
         break;
 
-        case 7:
+    case 7:
         typo.alphaDisplay(key, colorKeyBoard);
         break;
 
-        case 8:
+    case 8:
         if (frameCount % speedLongText == 0) {
             stringIndexNum++;
         }
         stingView("Christopher, Jealous, Jeniffer, JeongHo, Johann, Kim, Marius, Marc, Matthias, Max");
         break;
-    }    
+
+    case 9:
+        if (cameraOnOff) {
+            cameraPixelCapture();
+            cameraView();
+            cameraPixelView();
+        }
+        break;
+    }
 
 }
 
@@ -160,7 +186,7 @@ void audioSpectrum() {
     noStroke();
     fftLin.forward( in.mix );
 
-    for(int i = 0; i <  fftLin.avgSize(); i++) {
+    for (int i = 0; i <  fftLin.avgSize(); i++) {
 
         float _spectrumV = abs(fftLin.getBand(i)) * AudioInputVol;
 
@@ -204,7 +230,7 @@ void stingView(String str) {
 
 
 //----------------------------------------------------------------------------
-void basicMouseInteraction(){
+void basicMouseInteraction() {
 
     pushMatrix();
 
@@ -213,20 +239,21 @@ void basicMouseInteraction(){
     float dotSize = 50;
     // image(dot, mouseX - dotSize/2, mouseY - dotSize/2, dotSize, dotSize);
     if (mouseX < width * 0.5 ) {
-        rect(mouseX - dotSize/2, mouseY - dotSize/2, dotSize, dotSize);
+        rect(mouseX - dotSize / 2, mouseY - dotSize / 2, dotSize, dotSize);
     }
     popMatrix();
 
 }
 
 
+
 //----------------------------------------------------------------------------
-void allWindows(){
+void allWindows() {
 
     pushMatrix();
     pushStyle();
     if (allOnOff) {
-        for (int i=0; i<fenster.length; i++) {
+        for (int i = 0; i < fenster.length; i++) {
             fenster[i].display(colorAll);
         }
     }
@@ -236,11 +263,12 @@ void allWindows(){
 }
 
 
+
 //----------------------------------------------------------------------------
-void basicClickDrawing(){
+void basicClickDrawing() {
 
     pushMatrix();
-    for (int i=0; i<fenster.length; i++) {
+    for (int i = 0; i < fenster.length; i++) {
         fenster[i].clickDisplay();
         fenster[i].basicDisplay();
     }
@@ -249,11 +277,12 @@ void basicClickDrawing(){
 }
 
 
+
 //----------------------------------------------------------------------------
-void basicFadeDrawing(){
+void basicFadeDrawing() {
 
     pushMatrix();
-    for (int i=0; i<fenster.length; i++) {
+    for (int i = 0; i < fenster.length; i++) {
         float distX = dist(mouseX, 0, fenster[i].xMid, 0);
         float distY = dist(0, mouseY, 0, fenster[i].yMid);
         if (distX < fenster[i].width * 0.5 && distY < fenster[i].height * 0.5) {
@@ -261,7 +290,7 @@ void basicFadeDrawing(){
         } else {
             fenster[i].onoff = false;
         }
-        
+
         fenster[i].fadeDisplay();
         fenster[i].basicDisplay();
     }
@@ -270,8 +299,9 @@ void basicFadeDrawing(){
 }
 
 
+
 //----------------------------------------------------------------------------
-void basicLineMoving(){
+void basicLineMoving() {
 
     pushStyle();
     runPixelLineX = runPixelLineX + speedLine;
@@ -283,7 +313,7 @@ void basicLineMoving(){
     stroke(colorMovingLine);
     strokeWeight(widthLine);
     line(runPixelLineX, 0, runPixelLineX, height);
-    for (int i=0; i<5; i++) {
+    for (int i = 0; i < 5; i++) {
     }
     popStyle();
 
@@ -291,11 +321,106 @@ void basicLineMoving(){
 
 
 
+//----------------------------------------------------------------------------
+void cameraView() {
+    float _size = 1.0;
+    image(camera, 770, 400, 160, 120);
+}
+
+
 
 //----------------------------------------------------------------------------
-void mousePressed(){
+void cameraPixelCapture() {
 
-    for (int i=0; i<fenster.length; i++) {
+    int pixelSize = 20;
+    int rectSize = pixelSize;
+
+    int _offSetPixelNum = 30 + 10 * 160;
+
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            int index = i + j * 5;
+            int pixelIndex = i * rectSize + j * rectSize * 160 + _offSetPixelNum;
+
+            int _r = 0;
+            int _g = 0;
+            int _b = 0;
+
+            for (int k = 0; k < rectSize * rectSize; k++) {
+                int _pixelSumIndex = pixelIndex + k % 20 + k / 20 * 160;
+                _r += int(red(camera.pixels[_pixelSumIndex]));
+                _g += int(green(camera.pixels[_pixelSumIndex]));
+                _b += int(blue(camera.pixels[_pixelSumIndex]));
+            }
+
+            pixelColors[index] = color(_r / 400.0 * colorContrast, _g / 400.0 * colorContrast, _b / 400.0 * colorContrast);
+        }
+    }
+
+
+}
+
+
+//----------------------------------------------------------------------------
+void cameraPixelView() {
+
+    int pixelSize = 20;
+    int rectSize = pixelSize;
+    pushStyle();
+    noFill();
+    stroke(0, 255, 0);
+
+    float _size = 1.0;
+    int _captureXPos = 770 + int(160 * _size / 2.0 - rectSize * 5 / 2.0);
+    int _captureYPos = 400 + int(120 * _size / 2.0 - rectSize * 5 / 2.0);
+
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            int index = i + j * 5;
+            rect(i * rectSize + _captureXPos, j * rectSize + _captureYPos, rectSize, rectSize);
+        }
+    }
+
+    popStyle();
+
+
+    pushMatrix();
+    pushStyle();
+    translate(770, 280);
+    if (pixelColors.length > 0) {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                int index = i + j * 5;
+                color _c = pixelColors[index];
+                fill(_c);
+                rect(i * rectSize, j * rectSize, rectSize, rectSize);
+            }
+        }
+    }
+    popStyle();
+    popMatrix();
+
+    for (int i = 0; i < fenster.length; i++) {
+        color _c = pixelColors[i];
+        fenster[i].display(_c);
+    }
+
+}
+
+
+//----------------------------------------------------------------------------
+void captureEvent(Capture c) {
+    if (cameraOnOff) {
+        c.read();
+    }
+}
+
+
+
+//----------------------------------------------------------------------------
+void mousePressed() {
+
+    for (int i = 0; i < fenster.length; i++) {
         float distX = dist(mouseX, 0, fenster[i].xMid, 0);
         float distY = dist(0, mouseY, 0, fenster[i].yMid);
         if (distX < fenster[i].width * 0.5 && distY < fenster[i].height * 0.5 && mousePressed) {
@@ -308,7 +433,7 @@ void mousePressed(){
 
 
 //----------------------------------------------------------------------------
-void keyPressed(){
+void keyPressed() {
     if (colorRandomKeyboardOnOff) {
         colorKeyBoard = color(random(255), random(255), random(255));
     }
@@ -323,64 +448,65 @@ void opcSetup() {
     opc = new OPC[5];
 
     // für Simualtion
-    // for (int i=0; i<opc.length; i++) {
-    //     opc[i] = new OPC(this, "127.0.0.1", 7890 + i);
-    // }
+    for (int i=0; i<opc.length; i++) {
+        opc[i] = new OPC(this, "127.0.0.1", 7890 + i);
+    }
 
     // 5 x 5
-    opc[4] = new OPC(this, "192.168.1.230", 7890);
-    opc[3] = new OPC(this, "192.168.1.231", 7890);
-    opc[2] = new OPC(this, "192.168.1.232", 7890);
-    opc[1] = new OPC(this, "192.168.1.233", 7890);
-    opc[0] = new OPC(this, "192.168.1.234", 7890);
+    // opc[4] = new OPC(this, "192.168.1.230", 7890);
+    // opc[3] = new OPC(this, "192.168.1.231", 7890);
+    // opc[2] = new OPC(this, "192.168.1.232", 7890);
+    // opc[1] = new OPC(this, "192.168.1.233", 7890);
+    // opc[0] = new OPC(this, "192.168.1.234", 7890);
 
 
-    opc[4].ledStrip(0, 60, width/12 * 1, height/7 * 2, 1.0, 0, true);
-    opc[4].ledStrip(60, 60, width/12 * 2, height/7 * 2, 1.0, 0, true);
-    opc[4].ledStrip(120, 60, width/12 * 3, height/7 * 2, 1.0, 0, false);
-    opc[4].ledStrip(180, 60, width/12 * 4, height/7 * 2, 1.0, 0, false);
-    opc[4].ledStrip(240, 60, width/12 * 5, height/7 * 2, 1.0, 0, false);
-    opc[3].ledStrip(0, 60, width/12 * 1, height/7 * 3, 1.0, 0, true);
-    opc[3].ledStrip(60, 60, width/12 * 2, height/7 * 3, 1.0, 0, true);
-    opc[3].ledStrip(120, 60, width/12 * 3, height/7 * 3, 1.0, 0, false);
-    opc[3].ledStrip(180, 60, width/12 * 4, height/7 * 3, 1.0, 0, false);
-    opc[3].ledStrip(240, 60, width/12 * 5, height/7 * 3, 1.0, 0, false);
-    opc[2].ledStrip(0, 60, width/12 * 1, height/7 * 4, 1.0, 0, true);
-    opc[2].ledStrip(60, 60, width/12 * 2, height/7 * 4, 1.0, 0, true);
-    opc[2].ledStrip(120, 60, width/12 * 3, height/7 * 4, 1.0, 0, false);
-    opc[2].ledStrip(180, 60, width/12 * 4, height/7 * 4, 1.0, 0, false);
-    opc[2].ledStrip(240, 60, width/12 * 5, height/7 * 4, 1.0, 0, false);
-    opc[1].ledStrip(0, 60, width/12 * 1, height/7 * 5, 1.0, 0, true);
-    opc[1].ledStrip(60, 60, width/12 * 2, height/7 * 5, 1.0, 0, true);
-    opc[1].ledStrip(120, 60, width/12 * 3, height/7 * 5, 1.0, 0, false);
-    opc[1].ledStrip(180, 60, width/12 * 4, height/7 * 5, 1.0, 0, false);
-    opc[1].ledStrip(240, 60, width/12 * 5, height/7 * 5, 1.0, 0, false);
-    opc[0].ledStrip(0, 60, width/12 * 1, height/7 * 6, 1.0, 0, true);
-    opc[0].ledStrip(60, 60, width/12 * 2, height/7 * 6, 1.0, 0, true);
-    opc[0].ledStrip(120, 60, width/12 * 3, height/7 * 6, 1.0, 0, false);
-    opc[0].ledStrip(180, 60, width/12 * 4, height/7 * 6, 1.0, 0, false);
-    opc[0].ledStrip(240, 60, width/12 * 5, height/7 * 6, 1.0, 0, false);
+    opc[4].ledStrip(0, 60, width / 12 * 1, height / 7 * 2, 1.0, 0, true);
+    opc[4].ledStrip(60, 60, width / 12 * 2, height / 7 * 2, 1.0, 0, true);
+    opc[4].ledStrip(120, 60, width / 12 * 3, height / 7 * 2, 1.0, 0, false);
+    opc[4].ledStrip(180, 60, width / 12 * 4, height / 7 * 2, 1.0, 0, false);
+    opc[4].ledStrip(240, 60, width / 12 * 5, height / 7 * 2, 1.0, 0, false);
+    opc[3].ledStrip(0, 60, width / 12 * 1, height / 7 * 3, 1.0, 0, true);
+    opc[3].ledStrip(60, 60, width / 12 * 2, height / 7 * 3, 1.0, 0, true);
+    opc[3].ledStrip(120, 60, width / 12 * 3, height / 7 * 3, 1.0, 0, false);
+    opc[3].ledStrip(180, 60, width / 12 * 4, height / 7 * 3, 1.0, 0, false);
+    opc[3].ledStrip(240, 60, width / 12 * 5, height / 7 * 3, 1.0, 0, false);
+    opc[2].ledStrip(0, 60, width / 12 * 1, height / 7 * 4, 1.0, 0, true);
+    opc[2].ledStrip(60, 60, width / 12 * 2, height / 7 * 4, 1.0, 0, true);
+    opc[2].ledStrip(120, 60, width / 12 * 3, height / 7 * 4, 1.0, 0, false);
+    opc[2].ledStrip(180, 60, width / 12 * 4, height / 7 * 4, 1.0, 0, false);
+    opc[2].ledStrip(240, 60, width / 12 * 5, height / 7 * 4, 1.0, 0, false);
+    opc[1].ledStrip(0, 60, width / 12 * 1, height / 7 * 5, 1.0, 0, true);
+    opc[1].ledStrip(60, 60, width / 12 * 2, height / 7 * 5, 1.0, 0, true);
+    opc[1].ledStrip(120, 60, width / 12 * 3, height / 7 * 5, 1.0, 0, false);
+    opc[1].ledStrip(180, 60, width / 12 * 4, height / 7 * 5, 1.0, 0, false);
+    opc[1].ledStrip(240, 60, width / 12 * 5, height / 7 * 5, 1.0, 0, false);
+    opc[0].ledStrip(0, 60, width / 12 * 1, height / 7 * 6, 1.0, 0, true);
+    opc[0].ledStrip(60, 60, width / 12 * 2, height / 7 * 6, 1.0, 0, true);
+    opc[0].ledStrip(120, 60, width / 12 * 3, height / 7 * 6, 1.0, 0, false);
+    opc[0].ledStrip(180, 60, width / 12 * 4, height / 7 * 6, 1.0, 0, false);
+    opc[0].ledStrip(240, 60, width / 12 * 5, height / 7 * 6, 1.0, 0, false);
 
 }
 
 
 
 //----------------------------------------------------------------------------
-void setupControlP5(){
+void setupControlP5() {
 
-    PFont pfont = createFont("Arial",11,true);
-    ControlFont cfont = new ControlFont(pfont,11);
+    PFont pfont = createFont("Arial", 11, true);
+    ControlFont cfont = new ControlFont(pfont, 11);
 
+    int _sceneNum = 10;
     sceneList = cp5.addListBox("Scene List")
-    .setPosition(530, 30)
-    .setSize(210, 20 + 20 * 9)
-    .setFont(cfont)
-    .setItemHeight(20)
-    .setBarHeight(20)
-    .setColorBackground(color(60))
-    .setColorActive(color(220, 0, 0))
-    .setColorForeground(color(120, 220, 120))
-    ;
+                .setPosition(530, 30)
+                .setSize(210, 20 + 20 * _sceneNum)
+                .setFont(cfont)
+                .setItemHeight(20)
+                .setBarHeight(20)
+                .setColorBackground(color(60))
+                .setColorActive(color(220, 0, 0))
+                .setColorForeground(color(120, 220, 120))
+                ;
 
     sceneList.setValue(-1);
     sceneList.getCaptionLabel().toUpperCase(true);
@@ -395,6 +521,7 @@ void setupControlP5(){
     sceneList.addItem("Live Audio", 6);
     sceneList.addItem("KeyboardInput", 7);
     sceneList.addItem("Credit", 8);
+    sceneList.addItem("Camera Input", 9);
 
 }
 
@@ -403,43 +530,43 @@ void setupControlP5(){
 void controlEvent(ControlEvent theEvent) {
 
     if (theEvent.getName() == "Scene List") {
-        
+
         int _index = (int)(theEvent.getController().getValue());
-        
+
         switch (_index) {
-            case 0:
+        case 0:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
             cp5Sub.addColorWheel("colorMousePoint" , 500 + 270 , 30 , 200 ).
-            setRGB(color(128,0,255));
+            setRGB(color(128, 0, 255));
             break;
 
-            case 1:
+        case 1:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
             cp5Sub.addToggle("allOnOff")
             .setPosition(500 + 270, 30)
-            .setSize(50,50)
+            .setSize(50, 50)
             ;
             cp5Sub.addColorWheel("colorAll" , 500 + 270 , 30 + 70 , 200 ).
-            setRGB(color(128,0,255));
+            setRGB(color(128, 0, 255));
             break;
 
-            case 2:
+        case 2:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
             cp5Sub.addColorWheel("colorOneWindow" , 500 + 270 , 30 , 200 ).
-            setRGB(color(128,0,255));
+            setRGB(color(128, 0, 255));
             break;
 
-            case 3:
+        case 3:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
             cp5Sub.addColorWheel("colorFadeDrawing" , 500 + 270 , 30 , 200 ).
-            setRGB(color(128,0,255));
+            setRGB(color(128, 0, 255));
             break;
 
-            case 4:
+        case 4:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
             cp5Sub.addSlider("speedLine")
@@ -457,10 +584,10 @@ void controlEvent(ControlEvent theEvent) {
             .setSize(150, 26)
             ;
             cp5Sub.addColorWheel("colorMovingLine" , 500 + 270 , 30 + 70, 200 ).
-            setRGB(color(128,0,255));
+            setRGB(color(128, 0, 255));
             break;
 
-            case 5:
+        case 5:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
             cp5Sub.addSlider("speedLongText")
@@ -471,10 +598,10 @@ void controlEvent(ControlEvent theEvent) {
             .setSize(150, 26)
             ;
             cp5Sub.addColorWheel("colorLongText" , 500 + 270 , 30 + 70, 200 ).
-            setRGB(color(128,0,255));
+            setRGB(color(128, 0, 255));
             break;
 
-            case 6:
+        case 6:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
             cp5Sub.addSlider("AudioInputVol")
@@ -486,18 +613,18 @@ void controlEvent(ControlEvent theEvent) {
             ;
             break;
 
-            case 7:
+        case 7:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
             cp5Sub.addToggle("colorRandomKeyboardOnOff")
             .setPosition(500 + 270, 30)
-            .setSize(50,50)
+            .setSize(50, 50)
             ;
             cp5Sub.addColorWheel("colorKeyBoard" , 500 + 270 , 30 + 70, 200 ).
-            setRGB(color(128,0,255));
+            setRGB(color(128, 0, 255));
             break;
 
-            case 8:
+        case 8:
             cp5Sub.remove(this);
             cp5Sub = new ControlP5(this);
             cp5Sub.addSlider("speedLongText")
@@ -508,8 +635,25 @@ void controlEvent(ControlEvent theEvent) {
             .setSize(150, 26)
             ;
             cp5Sub.addColorWheel("colorLongText" , 500 + 270 , 30 + 70, 200 ).
-            setRGB(color(128,0,255));
+            setRGB(color(128, 0, 255));
             break;
+
+        case 9:
+            cp5Sub.remove(this);
+            cp5Sub = new ControlP5(this);
+            cp5Sub.addToggle("cameraOnOff")
+            .setPosition(500 + 270, 30)
+            .setSize(50, 50)
+            ;
+            cp5Sub.addSlider("colorContrast")
+            .setMin(0)
+            .setMax(4)
+            .setValue(1)
+            .setPosition(500 + 270, 30 + 70)
+            .setSize(150, 26)
+            ;
+            break;
+
         }
 
     }
