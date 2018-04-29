@@ -15,6 +15,8 @@ color[] pixelColors;
 
 ArrayList<AniFrame> aniFrames;
 
+
+
 //----------------------------------------------------------------------------
 public void settings() {
     size(640, 480);

@@ -148,7 +148,7 @@ void draw() {
         if (frameCount % speedLongText == 0) {
             stringIndexNum++;
         }
-        stingView("avelux!");
+        stringView("LUMEUS!");
         break;
 
     case 6:
@@ -163,7 +163,7 @@ void draw() {
         if (frameCount % speedLongText == 0) {
             stringIndexNum++;
         }
-        stingView("Christopher, Jealous, Jeniffer, JeongHo, Johann, Kim, Marius, Marc, Matthias, Max");
+        stringView("Christopher, Jealous, Jeniffer, JeongHo, Johann, Julian, Kim, Marius, Marc, Matthias, Max");
         break;
 
     case 9:
@@ -175,6 +175,8 @@ void draw() {
         break;
     }
 
+    String _f = nfs(frameRate, 2, 1);
+    text(_f, 770, 17);
 }
 
 
@@ -220,7 +222,7 @@ void audioSpectrum() {
 
 
 //----------------------------------------------------------------------------
-void stingView(String str) {
+void stringView(String str) {
 
     char _c = str.charAt(stringIndexNum % str.length());
     typo.alphaDisplay(_c, colorLongText);
@@ -463,6 +465,11 @@ void opcSetup(String s) {
 
     }
 
+    // for (int i=0; i<5; i++) {
+    //     for (int j=0; j<5; j++) {
+    //         opc[i].ledStrip(0 + 60 * j, 60, width / 12 * (1 + j), height / 7 * (7 - (i + 1)), 1.0, 0, true);
+    //     }
+    // }
 
     opc[4].ledStrip(0, 60, width / 12 * 1, height / 7 * 2, 1.0, 0, true);
     opc[4].ledStrip(60, 60, width / 12 * 2, height / 7 * 2, 1.0, 0, true);
