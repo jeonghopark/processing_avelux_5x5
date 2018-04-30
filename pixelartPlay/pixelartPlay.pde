@@ -20,7 +20,7 @@ void setup() {
 
     size(500, 500);
 
-    table = loadTable("test.csv", "header");
+    table = loadTable("sign_1.csv", "header");
 
     pixelColors = new color[25];
     aniFrames = new ArrayList<AniFrame>();
@@ -34,9 +34,9 @@ void setup() {
         AniFrame _frame = new AniFrame();
         for (int j = i * 25; j < 25 + i * 25; j++) {
             int fr = table.getInt(j, 0);
-            int r = table.getInt(j, 1);
-            int g = table.getInt(j, 2);
-            int b = table.getInt(j, 3);
+            int r = table.getInt(j, 1) * 1;
+            int g = table.getInt(j, 2) * 1;
+            int b = table.getInt(j, 3) * 1;
             _frame.pixelColor[j % 25] = color(r, g, b);
         }
         aniFrames.add(_frame);
@@ -52,7 +52,7 @@ void setup() {
 void draw() {
 
 
-    if (frameCount % 10 == 0) {
+    if (frameCount % 20 == 0) {
         frameCountNum++;
     }
 

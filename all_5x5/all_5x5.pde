@@ -8,14 +8,14 @@ import ddf.minim.analysis.*;
 import ddf.minim.*;
 
 import processing.video.*;
+import gab.opencv.*;
 
 Minim minim;
 AudioInput in;
 FFT fftLin;
 
-
 Capture camera;
-
+OpenCV opencv;
 
 ControlP5 cp5;
 ControlP5 cp5Sub;
@@ -52,6 +52,8 @@ boolean allOnOff = false;
 boolean colorRandomKeyboardOnOff = false;
 boolean cameraOnOff = false;
 float colorContrast;
+float inputContrast;
+int inputBrightness;
 
 
 color[] pixelColors;
@@ -71,6 +73,9 @@ void setup() {
     camera = new Capture(this, 160, 120, "USB Camera");
     // println(camera.list());
     camera.start();
+
+    opencv = new OpenCV(this, 160, 120);
+    opencv.useColor(RGB);
 
     cp5 = new ControlP5(this);
     setupControlP5();
@@ -339,6 +344,13 @@ void cameraPixelCapture() {
 
     int _offSetPixelNum = 30 + 10 * 160;
 
+    opencv.loadImage(camera);
+    opencv.brightness(inputBrightness);
+    opencv.contrast(inputContrast);
+
+
+    PImage _imageBuff = opencv.getSnapshot();    
+
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
             int index = i + j * 5;
@@ -350,9 +362,9 @@ void cameraPixelCapture() {
 
             for (int k = 0; k < rectSize * rectSize; k++) {
                 int _pixelSumIndex = pixelIndex + k % 20 + k / 20 * 160;
-                _r += int(red(camera.pixels[_pixelSumIndex]));
-                _g += int(green(camera.pixels[_pixelSumIndex]));
-                _b += int(blue(camera.pixels[_pixelSumIndex]));
+                _r += int(red(_imageBuff.pixels[_pixelSumIndex]));
+                _g += int(green(_imageBuff.pixels[_pixelSumIndex]));
+                _b += int(blue(_imageBuff.pixels[_pixelSumIndex]));
             }
 
             pixelColors[index] = color(_r / 400.0 * colorContrast, _g / 400.0 * colorContrast, _b / 400.0 * colorContrast);
@@ -585,14 +597,14 @@ void controlEvent(ControlEvent theEvent) {
             .setMax(5)
             .setValue(1)
             .setPosition(500 + 270, 30)
-            .setSize(150, 26)
+            .setSize(150, 22)
             ;
             cp5Sub.addSlider("widthLine")
             .setMin(1)
             .setMax(100)
             .setValue(4)
             .setPosition(500 + 270, 60)
-            .setSize(150, 26)
+            .setSize(150, 22)
             ;
             cp5Sub.addColorWheel("colorMovingLine" , 500 + 270 , 30 + 70, 200 ).
             setRGB(color(128, 0, 255));
@@ -606,7 +618,7 @@ void controlEvent(ControlEvent theEvent) {
             .setMax(120)
             .setValue(20)
             .setPosition(500 + 270, 30)
-            .setSize(150, 26)
+            .setSize(150, 22)
             ;
             cp5Sub.addColorWheel("colorLongText" , 500 + 270 , 30 + 70, 200 ).
             setRGB(color(128, 0, 255));
@@ -620,7 +632,7 @@ void controlEvent(ControlEvent theEvent) {
             .setMax(10)
             .setValue(2)
             .setPosition(500 + 270, 30)
-            .setSize(150, 26)
+            .setSize(150, 22)
             ;
             break;
 
@@ -643,7 +655,7 @@ void controlEvent(ControlEvent theEvent) {
             .setMax(120)
             .setValue(20)
             .setPosition(500 + 270, 30)
-            .setSize(150, 26)
+            .setSize(150, 22)
             ;
             cp5Sub.addColorWheel("colorLongText" , 500 + 270 , 30 + 70, 200 ).
             setRGB(color(128, 0, 255));
@@ -661,7 +673,21 @@ void controlEvent(ControlEvent theEvent) {
             .setMax(4)
             .setValue(1)
             .setPosition(500 + 270, 30 + 70)
-            .setSize(150, 26)
+            .setSize(150, 22)
+            ;
+            cp5Sub.addSlider("inputContrast")
+            .setMin(0)
+            .setMax(4)
+            .setValue(1)
+            .setPosition(500 + 270, 30 * 2 + 70)
+            .setSize(150, 22)
+            ;
+            cp5Sub.addSlider("inputBrightness")
+            .setMin(-255)
+            .setMax(255)
+            .setValue(0)
+            .setPosition(500 + 270, 30 * 3 + 70)
+            .setSize(150, 22)
             ;
             break;
 
