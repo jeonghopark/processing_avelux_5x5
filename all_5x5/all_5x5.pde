@@ -70,7 +70,7 @@ void setup() {
     fftLin = new FFT( in.bufferSize(), in.sampleRate() );
     fftLin.linAverages( 5 );
 
-    camera = new Capture(this, 160, 120, "USB Camera");
+    camera = new Capture(this, 160, 120);
     // println(camera.list());
     camera.start();
 
@@ -123,7 +123,7 @@ void draw() {
 
     pushMatrix();
     for (int i = 0; i < fenster.length; i++) {
-        fenster[i].basicDisplay();
+        fenster[i].basicFrameDisplay();
     }
     popMatrix();
 
@@ -180,8 +180,11 @@ void draw() {
         break;
     }
 
+    pushStyle();
+    fill(255);
     String _f = nfs(frameRate, 2, 1);
-    text(_f, 770, 17);
+    text("FPS : " + _f, 770, 17);
+    popStyle();
 }
 
 
@@ -277,7 +280,7 @@ void basicClickDrawing() {
     pushMatrix();
     for (int i = 0; i < fenster.length; i++) {
         fenster[i].clickDisplay();
-        fenster[i].basicDisplay();
+        fenster[i].basicFrameDisplay();
     }
     popMatrix();
 
@@ -299,7 +302,7 @@ void basicFadeDrawing() {
         }
 
         fenster[i].fadeDisplay();
-        fenster[i].basicDisplay();
+        fenster[i].basicFrameDisplay();
     }
     popMatrix();
 
@@ -448,12 +451,12 @@ void mousePressed() {
 
 //----------------------------------------------------------------------------
 void keyPressed() {
+    
     if (colorRandomKeyboardOnOff) {
         colorKeyBoard = color(random(255), random(255), random(255));
     }
+
 }
-
-
 
 
 //----------------------------------------------------------------------------
@@ -540,7 +543,7 @@ void setupControlP5() {
     sceneList.addItem("Click Drawing", 2);
     sceneList.addItem("Fade Drawing", 3);
     sceneList.addItem("Line Moving", 4);
-    sceneList.addItem("AVELUX!", 5);
+    sceneList.addItem("LUMEUS!", 5);
     sceneList.addItem("Live Audio", 6);
     sceneList.addItem("KeyboardInput", 7);
     sceneList.addItem("Credit", 8);

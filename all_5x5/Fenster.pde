@@ -29,8 +29,7 @@ class Fenster {
         oneColor = color(0);
     }
 
-    void basicDisplay(){
-        // basic window click drawing
+    void basicFrameDisplay(){
         pushStyle();
         noFill();
         stroke(255, 120);
@@ -39,7 +38,6 @@ class Fenster {
     }
 
     void display(){
-        // basic window click drawing
         pushStyle();
         fill(255);
         rect(xPos, yPos, width, height);
